@@ -5,6 +5,7 @@ import {
 	GoogleAuthProvider,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
+	signOut,
 } from 'firebase/auth';
 
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
@@ -26,23 +27,10 @@ googleProvider.setCustomParameters({
 	prompt: 'select_account',
 });
 
-// const twitterProvider = new TwitterAuthProvider();
-// twitterProvider.setCustomParameters({
-// 	prompt: 'select_account',
-// });
-
 export const auth = getAuth();
 
-// Google
 export const signInWithGooglePopup = () =>
 	signInWithPopup(auth, googleProvider);
-// export const signInWithGoogleRedirect = () =>
-// 	signInWithRedirect(auth, googleProvider);
-
-// Twitter
-// export const signInWithTwitterPopup = () =>
-// 	signInWithPopup(auth, twitterProvider);
-
 export const db = getFirestore();
 
 export const createUserDocumentFromAuth = async (
@@ -71,11 +59,6 @@ export const createUserDocumentFromAuth = async (
 		}
 	}
 	return userDocRef;
-
-	// if user data does not exists
-	// create / set the document with the data from the userAuth in my collection
-
-	// if user data exists
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -89,3 +72,5 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 
 	return await signInWithEmailAndPassword(auth, email, password);
 };
+
+export const signOutUser = async () => await signOut(auth);
