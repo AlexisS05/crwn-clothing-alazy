@@ -9,7 +9,6 @@ export const ProductsContext = createContext({
 export const ProductsProvider = ({ children }) => {
 	const [currentProduct, setCurrentProduct] = useState(PRODUCTS);
 	const value = { currentProduct };
-	console.log(value);
 
 	return (
 		<ProductsContext.Provider value={value}>
