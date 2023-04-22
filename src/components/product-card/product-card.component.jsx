@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import './product.card.styles.scss';
 
 import Button from '../button/button.component';
-import { CartContext } from '../../contexts/toggle-cart-open.component';
+import { CartContext } from '../../contexts/cart-open.context';
 
 const ProductCard = ({ product }) => {
 	const { name, price, imageUrl } = product;

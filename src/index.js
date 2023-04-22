@@ -5,8 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { UserProvider } from './contexts/user.context';
 import { ProductsProvider } from './contexts/products.context';
-import { CartProvider } from './contexts/toggle-cart-open.component';
-
+import { CartProvider } from './contexts/cart-open.context';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
 
