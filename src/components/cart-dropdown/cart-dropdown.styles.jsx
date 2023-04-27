@@ -1,29 +1,39 @@
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
-import { CartContext } from '../../contexts/cart-open.context';
+import {
+	BaseButton,
+	GoogleSignInButton,
+	InvertedButton,
+} from '../button/button.styles';
 
-import Button from '../button/button.component';
-import CartItem from '../cart-item/cart-item.component';
+export const CartDropDownContainer = styled.div`
+	position: absolute;
+	width: 240px;
+	height: 340px;
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	border: 1px solid black;
+	background-color: white;
+	top: 90px;
+	right: 40px;
+	z-index: 5;
 
-import './cart-dropdown.styles.scss';
+	${BaseButton},
+	${GoogleSignInButton},
+	${InvertedButton} {
+		margin-top: auto;
+	}
+`;
 
-const CartDropDown = () => {
-	const { cartItems } = useContext(CartContext);
-	const navigate = useNavigate();
+export const EmptyMessage = styled.span`
+	font-size: 18px;
+	margin: 50px auto;
+`;
 
-	const goToCheckoutHandler = () => {
-		navigate('./checkout');
-	};
-	return (
-		<div className='cart-dropdown-container'>
-			<div className='cart-items'>
-				{cartItems.map((item) => (
-					<CartItem key={item.id} cartItems={item}></CartItem>
-				))}
-			</div>
-			<Button onClick={goToCheckoutHandler}>GO TO CHECKOUT</Button>
-		</div>
-	);
-};
-export default CartDropDown;
+export const CartItems = styled.div`
+	height: 240px;
+	display: flex;
+	flex-direction: column;
+	overflow: scroll;
+`;
