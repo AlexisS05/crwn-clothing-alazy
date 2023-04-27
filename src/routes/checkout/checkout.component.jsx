@@ -15,7 +15,9 @@ const Checkout = () => {
 	return (
 		<CheckoutContainer>
 			<CheckoutHeader>
-				<HeaderBlock>Product</HeaderBlock>
+				<HeaderBlock>
+					<span>Product</span>
+				</HeaderBlock>
 				<HeaderBlock>
 					<span>Description</span>
 				</HeaderBlock>
