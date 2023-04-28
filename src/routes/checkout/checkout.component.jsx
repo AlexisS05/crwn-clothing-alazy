@@ -10,7 +10,7 @@ import {
 } from './checkout.styles.jsx';
 
 const Checkout = () => {
-	const { cartItems, totalPrice } = useContext(CartContext);
+	const { cartItems, cartTotal, cartCount } = useContext(CartContext);
 
 	return (
 		<CheckoutContainer>
@@ -34,8 +34,8 @@ const Checkout = () => {
 			{cartItems.map((item) => (
 				<CheckoutItem key={item.id} cartItems={item}></CheckoutItem>
 			))}
-			{totalPrice > 1 ? (
-				<Total as='span'>Total Price: ${totalPrice}</Total>
+			{cartCount >= 1 ? (
+				<Total>Total Price: ${cartTotal}</Total>
 			) : (
 				<span>There is no items in your cart.</span>
 			)}
