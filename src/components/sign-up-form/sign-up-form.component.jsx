@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import FormInput from '../form-input/form-input.component';
 import Button from '../button/button.component';
@@ -9,19 +10,19 @@ import {
 } from '../../utils/firebase/firebase.utils';
 
 import { SignUpContainer } from './sign-up-form.styles.jsx';
+import { signUpStart } from '../../store/user/user.action';
 
 const defaultFormFields = {
 	displayName: '',
 	email: '',
 	password: '',
 	confirmPassword: '',
-	phoneNumber: '',
 };
 
 const SignUpForm = () => {
+	const dispatch = useDispatch();
 	const [formFields, setFormFields] = useState(defaultFormFields);
-	const { displayName, email, password, confirmPassword, phoneNumber } =
-		formFields;
+	const { displayName, email, password, confirmPassword } = formFields;
 
 	const resetFormFields = () => {
 		setFormFields(defaultFormFields);
@@ -38,17 +39,17 @@ const SignUpForm = () => {
 
 		// 2 See if user authenticated with email and password
 		try {
-			const { user } = await createAuthUserWithEmailAndPassword(
-				email,
-				password
-			);
-
+			// const { user } = await createAuthUserWithEmailAndPassword(
+			// 	email,
+			// 	password
+			// );
+			dispatch(signUpStart(email, password, displayName));
 			// console.log(user)
 
 			// 3 Create user document
-			await createUserDocumentFromAuth(user, {
-				displayName,
-			});
+			// await createUserDocumentFromAuth(user, {
+			// 	displayName,
+			// });
 			resetFormFields();
 		} catch (err) {
 			if (err.code === 'auth/email-already-in-use') {
@@ -101,14 +102,7 @@ const SignUpForm = () => {
 					name='confirmPassword'
 					value={confirmPassword}
 				/>
-				<FormInput
-					label='Phone Number'
-					type='number'
-					required
-					onChange={handleChange}
-					name='phoneNumber'
-					value={phoneNumber}
-				/>
+
 				<Button type='submit'>Sign Up</Button>
 			</form>
 		</SignUpContainer>
