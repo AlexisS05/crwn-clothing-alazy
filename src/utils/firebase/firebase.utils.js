@@ -46,7 +46,8 @@ export const db = getFirestore();
 
 export const addCollectionAndDocuments = async (
 	collectionKey,
-	objectsToAdd
+	objectsToAdd,
+	field
 ) => {
 	const collectionRef = collection(db, collectionKey);
 	const batch = writeBatch(db);
@@ -70,7 +71,7 @@ export const getCategoriesAndDocuments = async () => {
 
 export const createUserDocumentFromAuth = async (
 	userAuth,
-	additionalInformation = {}
+	additionalDetails = {}
 ) => {
 	if (!userAuth) return;
 
@@ -87,8 +88,10 @@ export const createUserDocumentFromAuth = async (
 				displayName,
 				email,
 				createdAt,
-				...additionalInformation,
+				...additionalDetails,
 			});
+			const userSnapshot = await getDoc(userDocRef);
+			return userSnapshot;
 		} catch (err) {
 			console.error('error creating the user', err.message);
 		}

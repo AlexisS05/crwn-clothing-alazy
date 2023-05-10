@@ -71,7 +71,6 @@ export function* signUp({ payload: { email, password, displayName } }) {
 			email,
 			password
 		);
-		console.log(user, 'Signed Up');
 		yield put(signUpSuccess(user, { displayName }));
 	} catch (err) {
 		yield put(signUpFailed(err));
@@ -80,7 +79,6 @@ export function* signUp({ payload: { email, password, displayName } }) {
 
 export function* signInAfterSignUp({ payload: { user, additionalDetails } }) {
 	yield call(getSnapshotFromUserAuth, user, additionalDetails);
-	console.log('test');
 }
 
 export function* onGoogleSignInStart() {
