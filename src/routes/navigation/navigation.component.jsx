@@ -1,6 +1,6 @@
-import { Fragment, useContext } from 'react';
+import { Fragment } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { ReactComponent as CrwnLogo } from '../../assets/crown.svg';
 
@@ -9,7 +9,9 @@ import CartDropDown from '../../components/cart-dropdown/cart-dropdown.component
 
 import { selectCurrentUser } from '../../store/user/user.selector.js';
 
-import { signOutUser } from '../../utils/firebase/firebase.utils';
+// import { signOutUser } from '../../utils/firebase/firebase.utils';
+
+import { signOutStart } from '../../store/user/user.action';
 
 import {
 	NavigationContainer,
@@ -20,8 +22,10 @@ import {
 import { selectIsCartOpen } from '../../store/cart/cart.selector';
 
 const Navigation = () => {
+	const dispatch = useDispatch();
 	const currentUser = useSelector(selectCurrentUser);
 	const isCartOpen = useSelector(selectIsCartOpen);
+	const signOutUser = () => dispatch(signOutStart());
 
 	return (
 		<Fragment>
