@@ -1,4 +1,4 @@
-import { takeLatest, all, call, put, take } from 'redux-saga/effects';
+import { takeLatest, all, call, put } from 'redux-saga/effects';
 
 import {
 	getCurrentUser,
