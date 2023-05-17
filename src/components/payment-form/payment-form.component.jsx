@@ -1,24 +1,28 @@
 import { useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import './payment-form.styles';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { selectCartTotal } from '../../store/cart/cart.selector';
+import {
+	selectCartItems,
+	selectCartTotal,
+} from '../../store/cart/cart.selector';
 import { selectCurrentUser } from '../../store/user/user.selector';
 
 import { BUTTON_TYPE_CLASSES } from '../button/button.component';
-import { CART_ACTION_TYPES } from '../../store/cart/cart.types';
 
 import {
 	PaymentFormContainer,
 	FormContainer,
 	PaymentButton,
 } from './payment-form.styles';
+import { CART_ACTION_TYPES } from '../../store/cart/cart.types';
 
 const PaymentForm = () => {
-	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const cartItems = useSelector(selectCartItems);
+	const navigate = useNavigate();
 	const stripe = useStripe();
 	const elements = useElements();
 	const amount = useSelector(selectCartTotal);
@@ -26,6 +30,8 @@ const PaymentForm = () => {
 	const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
 	const goToConfirmationPage = () => {
+		localStorage.setItem('cartItems', JSON.stringify(cartItems));
+		localStorage.setItem('amount', JSON.stringify(amount));
 		navigate('/confirmation');
 	};
 
