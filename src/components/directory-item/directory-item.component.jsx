@@ -5,6 +5,12 @@ import {
 	Body,
 	DirectoryItemContainer,
 } from './directory-item.styles';
+import { ChangeEvent } from 'react';
+
+// type Category = {
+// 	category: ;
+// 	imageUrl: (event: ChangeEvent<HTMLDivElement>) => void;
+// };
 
 const DirectoryItem = ({ category }) => {
 	const { imageUrl, title, route } = category;

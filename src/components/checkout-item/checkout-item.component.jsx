@@ -13,8 +13,8 @@ import {
 	addItemToCart,
 	deleteItemFromCart,
 	subtractItemToCart,
-} from '../../store/cart/cart.action.js';
-import { selectCartItems } from '../../store/cart/cart.selector.js';
+} from '../../store/cart/cart.action';
+import { selectCartItems } from '../../store/cart/cart.selector';
 
 const CheckoutItem = ({ cartItems }) => {
 	const dispatch = useDispatch();
