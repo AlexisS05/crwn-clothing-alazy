@@ -12,10 +12,3 @@ export enum USER_ACTION_TYPES {
 	SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS',
 	SIGN_OUT_FAILED = 'SIGN_OUT_FAILED',
 }
-
-export type CurrentUser = {
-	displayName: string;
-	email: string;
-	password: string;
-	additionalDetails: string;
-};
