@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import './confirmation.styles';
 import { useNavigate } from 'react-router-dom';
 import { selectCurrentUser } from '../../store/user/user.selector';
 import { ReactComponent as CheckMark } from '../../assets/check.svg';
@@ -11,24 +12,20 @@ import {
 	ContinueButton,
 } from './confirmation.styles';
 
-const ConfirmationPage: React.FC = () => {
+const ConfirmationPage = () => {
 	const currentUser = useSelector(selectCurrentUser);
-	const storedCartItems: any[] | null = JSON.parse(
-		localStorage.getItem('cartItems') as string
-	);
-	const storedAmount: number | null = JSON.parse(
-		localStorage.getItem('amount') as string
-	);
-	const [cartItems, setCartItems] = useState<any[]>(storedCartItems || []);
-	const [amount, setAmount] = useState<number>(storedAmount || 0);
+	const storedCartItems = JSON.parse(localStorage.getItem('cartItems'));
+	const storedAmount = JSON.parse(localStorage.getItem('amount'));
+	const [cartItems, setCartItems] = useState(storedCartItems || []);
+	const [amount, setAmount] = useState(storedAmount || 0);
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+		const handleBeforeUnload = (event) => {
 			// Only remove cartItems from localStorage if the user is closing the tab/browser
 			if (
-				window.location.pathname === '/confirmation' ||
-				window.location.pathname === '/'
+				event.currentTarget.location.pathname === '/confirmation' ||
+				event.currentTarget.location.pathname === '/'
 			) {
 				event.preventDefault();
 				event.returnValue = '';

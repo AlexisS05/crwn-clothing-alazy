@@ -80,7 +80,7 @@ const PaymentForm = () => {
 		} else {
 			if (paymentResult.paymentIntent.status === 'succeeded') {
 				console.log('Payment Successful');
-				goToConfirmationPage();
+				// goToConfirmationPage();
 				dispatch({ type: CART_ACTION_TYPES.CLEAR_CART_ITEMS });
 			}
 		}
