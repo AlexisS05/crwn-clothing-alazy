@@ -6,7 +6,7 @@ import {
 	CheckoutHeader,
 	HeaderBlock,
 	Total,
-} from './checkout.styles.jsx';
+} from './checkout.styles';
 import { useSelector } from 'react-redux';
 import {
 	selectCartCount,

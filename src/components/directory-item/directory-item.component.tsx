@@ -5,14 +5,18 @@ import {
 	Body,
 	DirectoryItemContainer,
 } from './directory-item.styles';
-import { ChangeEvent } from 'react';
 
-// type Category = {
-// 	category: ;
-// 	imageUrl: (event: ChangeEvent<HTMLDivElement>) => void;
-// };
+type DirectoryProps = {
+	route: string;
+	title: string;
+	imageUrl: string;
+};
 
-const DirectoryItem = ({ category }) => {
+type DirectoryItemsProps = {
+	category: DirectoryProps;
+};
+
+const DirectoryItem = ({ category }: DirectoryItemsProps) => {
 	const { imageUrl, title, route } = category;
 	const navigate = useNavigate();
 
