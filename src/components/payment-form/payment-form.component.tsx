@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import {
 	selectCartItems,
 	selectCartTotal,
+	selectIsCartOpen,
 } from '../../store/cart/cart.selector';
 import { selectCurrentUser } from '../../store/user/user.selector';
 
@@ -18,20 +19,20 @@ import {
 	FormContainer,
 	PaymentButton,
 } from './payment-form.styles';
-import { CART_ACTION_TYPES } from '../../store/cart/cart.types';
+import { clearCartItems } from '../../store/cart/cart.action';
 
 const ifValidCardElement = (
 	card: StripeCardElement | null
 ): card is StripeCardElement => card !== null;
 
 const PaymentForm = () => {
-	const dispatch = useDispatch();
 	const cartItems = useSelector(selectCartItems);
 	const navigate = useNavigate();
 	const stripe = useStripe();
 	const elements = useElements();
 	const amount = useSelector(selectCartTotal);
 	const currentUser = useSelector(selectCurrentUser);
+
 	const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
 	const goToConfirmationPage = () => {
@@ -81,7 +82,6 @@ const PaymentForm = () => {
 			if (paymentResult.paymentIntent.status === 'succeeded') {
 				console.log('Payment Successful');
 				goToConfirmationPage();
-				dispatch({ type: CART_ACTION_TYPES.CLEAR_CART_ITEMS });
 			}
 		}
 	};

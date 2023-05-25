@@ -4,6 +4,7 @@ import {
 	ActionWithPayload,
 	createAction,
 	withMatcher,
+	Action,
 } from '../../utils/reducer/reducer.utils';
 
 const addCartItem = (
@@ -85,6 +86,16 @@ export type SetCartItems = ActionWithPayload<
 	CART_ACTION_TYPES.SET_CART_ITEMS,
 	CartItems[]
 >;
+
+export type ClearCartItems = ActionWithPayload<
+	CART_ACTION_TYPES.CLEAR_CART_ITEMS,
+	boolean
+>;
+
+export const clearCartItems = withMatcher(
+	(isCartOpen: boolean): ClearCartItems =>
+		createAction(CART_ACTION_TYPES.CLEAR_CART_ITEMS, isCartOpen)
+);
 
 export const addItemToCart = (
 	cartItems: CartItems[],

@@ -1,4 +1,4 @@
-import { setCartItems, setIsCartOpen } from './cart.action';
+import { setCartItems, setIsCartOpen, clearCartItems } from './cart.action';
 import { CartItems } from './cart.types';
 import { AnyAction } from 'redux';
 
@@ -22,6 +22,9 @@ export const cartReducer = (
 
 	if (setCartItems.match(action)) {
 		return { ...state, cartItems: action.payload };
+	}
+	if (clearCartItems.match(action)) {
+		return { ...state, cartItems: [], isCartOpen: action.payload };
 	}
 
 	return state;
