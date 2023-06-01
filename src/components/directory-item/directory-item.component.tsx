@@ -5,7 +5,7 @@ import {
 	Body,
 	DirectoryItemContainer,
 } from './directory-item.styles';
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 
 type DirectoryProps = {
 	route: string;
@@ -21,7 +21,7 @@ const DirectoryItem: FC<DirectoryItemsProps> = ({ category }) => {
 	const { imageUrl, title, route } = category;
 	const navigate = useNavigate();
 
-	const onNavigateHandler = () => navigate(route);
+	const onNavigateHandler = useCallback(() => navigate(route), []);
 
 	return (
 		<DirectoryItemContainer onClick={onNavigateHandler}>
