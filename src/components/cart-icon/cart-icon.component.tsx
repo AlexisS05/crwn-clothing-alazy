@@ -17,7 +17,7 @@ const CartIcon = () => {
 
 	return (
 		<CartIconContainer onClick={toggleIsCartOpen}>
-			<ShoppingIcon />
+			<ShoppingIcon className='shopping-icon' />
 			<ItemCount>{cartCount}</ItemCount>
 		</CartIconContainer>
 	);
