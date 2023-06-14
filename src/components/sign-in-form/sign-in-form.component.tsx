@@ -15,7 +15,7 @@ const defaultFormFields = {
 	password: '',
 };
 
-const SignInForm = () => {
+const SignInForm: React.FC<{ isActive: boolean }> = ({ isActive }) => {
 	const dispatch = useDispatch();
 	const [formFields, setFormFields] = useState(defaultFormFields);
 	const { email, password } = formFields;
@@ -53,7 +53,7 @@ const SignInForm = () => {
 	};
 
 	return (
-		<SignInContainer>
+		<SignInContainer isActive={isActive}>
 			<h2>I already have an account</h2>
 			<span>Sign in with your email and password</span>
 			<form onSubmit={handleSubmit}>
