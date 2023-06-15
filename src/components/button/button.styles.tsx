@@ -30,12 +30,12 @@ export const BaseButton = styled.button`
 	@media screen and (max-width: 800px) {
 		min-width: 60px;
 		font-size: 13px;
-		padding: 0 25px 0 25px;
+		padding: 0 35px 0 35px;
 	}
 
 	@media screen and (max-width: 400px) {
-		min-width: 60px;
-		font-size: 13px;
+		width: auto;
+		font-size: 12px;
 		padding: 0 25px 0 25px;
 	}
 `;
