@@ -20,7 +20,7 @@ export const CheckoutHeader = styled.div`
 	justify-content: space-between;
 	border-bottom: 1px solid darkgrey;
 
-	@media screen and (max-width: 400px) {
+	@media screen and (max-width: 800px) {
 		width: 100%;
 		font-size: 14px;
 		padding: 5px 0;
@@ -35,7 +35,7 @@ export const HeaderBlock = styled.div`
 		width: 8%;
 	}
 
-	@media screen and (max-width: 400px) {
+	@media screen and (max-width: 800px) {
 		width: 100%;
 		font-size: 16px;
 	}
@@ -46,7 +46,7 @@ export const Total = styled.span`
 	margin-left: auto;
 	font-size: 36px;
 
-	@media screen and (max-width: 400px) {
+	@media screen and (max-width: 800px) {
 		font-size: 24px;
 	}
 `;
