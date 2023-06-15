@@ -2,13 +2,12 @@ import { useState, FormEvent } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { StripeCardElement } from '@stripe/stripe-js';
 import './payment-form.styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import {
 	selectCartItems,
 	selectCartTotal,
-	selectIsCartOpen,
 } from '../../store/cart/cart.selector';
 import { selectCurrentUser } from '../../store/user/user.selector';
 
@@ -19,7 +18,6 @@ import {
 	FormContainer,
 	PaymentButton,
 } from './payment-form.styles';
-import { clearCartItems } from '../../store/cart/cart.action';
 
 const ifValidCardElement = (
 	card: StripeCardElement | null
@@ -34,6 +32,7 @@ const PaymentForm = () => {
 	const currentUser = useSelector(selectCurrentUser);
 
 	const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+	const [isFormComplete, setIsFormComplete] = useState(false);
 
 	const goToConfirmationPage = () => {
 		localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -86,14 +85,23 @@ const PaymentForm = () => {
 		}
 	};
 
+	const handleCardInputChange = (event: any) => {
+		setIsFormComplete(event.complete);
+	};
+
 	return (
 		<PaymentFormContainer>
 			<FormContainer onSubmit={paymentHandler}>
 				<h2>Credit Card Payment: </h2>
-				<CardElement />
+				<CardElement onChange={handleCardInputChange} />
 				<PaymentButton
 					isLoading={isProcessingPayment}
-					buttonType={BUTTON_TYPE_CLASSES.inverted}
+					buttonType={
+						isFormComplete
+							? BUTTON_TYPE_CLASSES.base
+							: BUTTON_TYPE_CLASSES.disabled
+					}
+					disabled={!isFormComplete}
 				>
 					Pay Now
 				</PaymentButton>

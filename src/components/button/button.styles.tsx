@@ -66,3 +66,15 @@ export const ButtonSpinner = styled(SpinnerContainer)`
 	width: 30px;
 	height: 30px;
 `;
+
+export const DisabledButton = styled(BaseButton)`
+	background-color: gray;
+	color: white;
+	cursor: not-allowed;
+
+	&:hover {
+		background-color: gray;
+		color: white;
+		border: none;
+	}
+`;
