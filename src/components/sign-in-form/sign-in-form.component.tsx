@@ -9,6 +9,7 @@ import {
 	googleSignInStart,
 	emailSignInStart,
 } from '../../store/user/user.action';
+import { useNavigate } from 'react-router-dom';
 
 const defaultFormFields = {
 	email: '',
@@ -16,6 +17,7 @@ const defaultFormFields = {
 };
 
 const SignInForm: React.FC<{ isActive: boolean }> = ({ isActive }) => {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [formFields, setFormFields] = useState(defaultFormFields);
 	const { email, password } = formFields;
@@ -24,12 +26,15 @@ const SignInForm: React.FC<{ isActive: boolean }> = ({ isActive }) => {
 		setFormFields(defaultFormFields);
 	};
 
+	const goToConfirmationPage = () => {
+		navigate('/');
+	};
+
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		try {
 			dispatch(emailSignInStart(email, password));
 			resetFormFields();
-			// setCurrentUser(user);
 		} catch (err) {
 			// switch (err.code) {
 			// 	case 'auth/wrong-password':

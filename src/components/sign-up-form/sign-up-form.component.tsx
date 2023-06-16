@@ -48,11 +48,7 @@ const SignUpForm: React.FC<{ isActive: boolean }> = ({ isActive }) => {
 			// });
 			resetFormFields();
 		} catch (err) {
-			if ((err as AuthError).code === AuthErrorCodes.EMAIL_EXISTS) {
-				alert('Cannot create user, email already in use');
-			} else {
-				console.error(err as Error);
-			}
+			console.error(err as Error);
 		}
 	};
 

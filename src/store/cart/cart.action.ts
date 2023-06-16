@@ -4,7 +4,6 @@ import {
 	ActionWithPayload,
 	createAction,
 	withMatcher,
-	Action,
 } from '../../utils/reducer/reducer.utils';
 
 const addCartItem = (

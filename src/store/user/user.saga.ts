@@ -1,5 +1,5 @@
 import { takeLatest, all, call, put } from 'typed-redux-saga/macro';
-import { User } from 'firebase/auth';
+import { AuthErrorCodes, User } from 'firebase/auth';
 
 import {
 	getCurrentUser,
@@ -24,6 +24,7 @@ import {
 	SignUpStart,
 	SignUpSuccess,
 } from './user.action';
+import { FirebaseError } from 'firebase/app';
 
 export function* getSnapshotFromUserAuth(
 	userAuth: User,
@@ -58,8 +59,13 @@ export function* signInWithEmail({
 			const { user } = userCredential;
 			yield* call(getSnapshotFromUserAuth, user);
 		}
-	} catch (err) {
-		yield* put(signInFailed(err as Error));
+	} catch (err: unknown) {
+		if ((err as FirebaseError).code === AuthErrorCodes.INVALID_PASSWORD) {
+			yield* put(signUpFailed(new Error('Incorrect email or password')));
+			alert('Incorrect email or password');
+		} else {
+			yield* put(signUpFailed(err as Error));
+		}
 	}
 }
 
@@ -96,8 +102,13 @@ export function* signUp({
 			const { user } = userCredential;
 			yield* put(signUpSuccess(user, { displayName }));
 		}
-	} catch (err) {
-		yield* put(signUpFailed(err as Error));
+	} catch (err: unknown) {
+		if ((err as FirebaseError).code === AuthErrorCodes.EMAIL_EXISTS) {
+			yield* put(signUpFailed(new Error('auth/email-already-in-use')));
+			alert('Email already in use');
+		} else {
+			yield* put(signUpFailed(err as Error));
+		}
 	}
 }
 

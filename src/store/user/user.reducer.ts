@@ -35,7 +35,11 @@ export const userReducer = (
 		};
 	}
 
-	if ((signOutFailed || signUpFailed || signInFailed).match(action)) {
+	if (
+		signOutFailed.match(action) ||
+		signUpFailed.match(action) ||
+		signInFailed.match(action)
+	) {
 		return { ...state, error: action.payload };
 	}
 
