@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Elements } from '@stripe/react-stripe-js';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import App from './App';
 
@@ -22,6 +24,7 @@ root.render(
 					<Elements stripe={stripePromise}>
 						<App />
 					</Elements>
+					<ToastContainer />
 				</BrowserRouter>
 			</PersistGate>
 		</Provider>

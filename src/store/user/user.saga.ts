@@ -1,5 +1,6 @@
 import { takeLatest, all, call, put } from 'typed-redux-saga/macro';
 import { AuthErrorCodes, User } from 'firebase/auth';
+import { toast, ToastOptions } from 'react-toastify';
 
 import {
 	getCurrentUser,
@@ -25,6 +26,11 @@ import {
 	SignUpSuccess,
 } from './user.action';
 import { FirebaseError } from 'firebase/app';
+import { useNavigate } from 'react-router-dom';
+
+export function displayNotification(message: string, options: ToastOptions) {
+	toast(message, options);
+}
 
 export function* getSnapshotFromUserAuth(
 	userAuth: User,
@@ -58,11 +64,13 @@ export function* signInWithEmail({
 		if (userCredential) {
 			const { user } = userCredential;
 			yield* call(getSnapshotFromUserAuth, user);
+			// const navigate = useNavigate();
+			// navigate('/dashboard');
 		}
 	} catch (err: unknown) {
 		if ((err as FirebaseError).code === AuthErrorCodes.INVALID_PASSWORD) {
 			yield* put(signUpFailed(new Error('Incorrect email or password')));
-			alert('Incorrect email or password');
+			displayNotification('Incorrect email or password', { type: 'error' });
 		} else {
 			yield* put(signUpFailed(err as Error));
 		}
@@ -105,7 +113,9 @@ export function* signUp({
 	} catch (err: unknown) {
 		if ((err as FirebaseError).code === AuthErrorCodes.EMAIL_EXISTS) {
 			yield* put(signUpFailed(new Error('auth/email-already-in-use')));
-			alert('Email already in use');
+			displayNotification('Email already in use', {
+				type: 'error',
+			});
 		} else {
 			yield* put(signUpFailed(err as Error));
 		}

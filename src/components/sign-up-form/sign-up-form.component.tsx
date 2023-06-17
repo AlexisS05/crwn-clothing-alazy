@@ -1,5 +1,4 @@
 import { useState, FormEvent, ChangeEvent } from 'react';
-import { AuthError, AuthErrorCodes } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 
 import FormInput from '../form-input/form-input.component';
@@ -48,7 +47,8 @@ const SignUpForm: React.FC<{ isActive: boolean }> = ({ isActive }) => {
 			// });
 			resetFormFields();
 		} catch (err) {
-			console.error(err as Error);
+			console.log(err);
+			console.error(err);
 		}
 	};
 
