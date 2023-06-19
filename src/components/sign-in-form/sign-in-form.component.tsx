@@ -9,7 +9,6 @@ import {
 	googleSignInStart,
 	emailSignInStart,
 } from '../../store/user/user.action';
-import { useNavigate } from 'react-router-dom';
 
 const defaultFormFields = {
 	email: '',
@@ -17,19 +16,12 @@ const defaultFormFields = {
 };
 
 const SignInForm: React.FC<{ isActive: boolean }> = ({ isActive }) => {
-	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const [signInError, setSignInError] = useState('');
 	const [formFields, setFormFields] = useState(defaultFormFields);
 	const { email, password } = formFields;
-	const [redirectToHome, setRedirectToHome] = useState(false);
 
 	const resetFormFields = () => {
 		setFormFields(defaultFormFields);
-	};
-
-	const goToHomePage = () => {
-		navigate('/');
 	};
 
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -37,25 +29,10 @@ const SignInForm: React.FC<{ isActive: boolean }> = ({ isActive }) => {
 		try {
 			dispatch(emailSignInStart(email, password));
 			resetFormFields();
-			setRedirectToHome(true);
 		} catch (err) {
-			// switch (err.code) {
-			// 	case 'auth/wrong-password':
-			// 		alert('Incorrect password for email');
-			// 		break;
-			// 	case 'auth/user-not-found':
-			// 		alert('No user associated with this email');
-			// 		break;
-			// 	default:
 			console.error('user sign in failed', err);
-
-			setSignInError('Incorrect email or password.');
 		}
 	};
-
-	if (redirectToHome && !signInError) {
-		goToHomePage();
-	}
 
 	const logGoogleUser = async () => {
 		dispatch(googleSignInStart());

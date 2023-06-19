@@ -12,6 +12,9 @@ import {
 	AddtionalInformation,
 } from '../../utils/firebase/firebase.utils';
 
+export type NavigateToHomePage =
+	Action<USER_ACTION_TYPES.NAVIGATE_TO_HOME_PAGE>;
+
 export type SetCurrentUser = ActionWithPayload<
 	USER_ACTION_TYPES.SET_CURRENT_USER,
 	UserData
@@ -57,6 +60,11 @@ export type SignOutFailed = ActionWithPayload<
 	USER_ACTION_TYPES.SIGN_OUT_FAILED,
 	Error
 >;
+
+export const navigateToHomePage = withMatcher(
+	(): NavigateToHomePage =>
+		createAction(USER_ACTION_TYPES.NAVIGATE_TO_HOME_PAGE)
+);
 
 export const setCurrentUser = withMatcher(
 	(user: UserData): SetCurrentUser =>

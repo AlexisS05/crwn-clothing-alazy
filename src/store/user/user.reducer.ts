@@ -5,6 +5,7 @@ import {
 	signOutFailed,
 	signOutSuccess,
 	signUpFailed,
+	navigateToHomePage,
 } from './user.action';
 import { AnyAction } from 'redux';
 
@@ -25,7 +26,15 @@ export const userReducer = (
 	action: AnyAction
 ): UserState => {
 	if (signInSuccess.match(action)) {
-		return { ...state, currentUser: action.payload };
+		return {
+			...state,
+			currentUser: action.payload,
+		};
+	}
+
+	if (navigateToHomePage.match(action)) {
+		window.location.href = '/';
+		return state;
 	}
 
 	if (signOutSuccess.match(action)) {

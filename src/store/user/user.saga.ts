@@ -24,9 +24,9 @@ import {
 	EmailSignInStart,
 	SignUpStart,
 	SignUpSuccess,
+	navigateToHomePage,
 } from './user.action';
 import { FirebaseError } from 'firebase/app';
-import { useNavigate } from 'react-router-dom';
 
 export function displayNotification(message: string, options: ToastOptions) {
 	toast(message, options);
@@ -64,8 +64,7 @@ export function* signInWithEmail({
 		if (userCredential) {
 			const { user } = userCredential;
 			yield* call(getSnapshotFromUserAuth, user);
-			// const navigate = useNavigate();
-			// navigate('/dashboard');
+			yield* put(navigateToHomePage());
 		}
 	} catch (err: unknown) {
 		if ((err as FirebaseError).code === AuthErrorCodes.INVALID_PASSWORD) {

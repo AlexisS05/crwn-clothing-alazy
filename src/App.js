@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { useEffect, lazy, Suspense } from 'react';
+import { useEffect, lazy, Suspense, useState } from 'react';
 
 // import Home from './routes/home/home.component';
 
@@ -9,6 +9,8 @@ import ConfirmationPage from './routes/confirmation/confirmation.component';
 import { checkUserSession } from './store/user/user.action';
 import Spinner from './components/spinner/spinner.component';
 import { GlobalStyle } from './global.styles';
+import { displayNotification } from './store/user/user.saga';
+import { selectCurrentUser } from './store/user/user.selector';
 
 const Navigation = lazy(() =>
 	import('./routes/navigation/navigation.component')
@@ -22,9 +24,29 @@ const Authentication = lazy(() =>
 
 const App = () => {
 	const dispatch = useDispatch();
+	const currentUser = useSelector(selectCurrentUser);
+	const [userName, setUserName] = useState('Guest');
+
 	useEffect(() => {
 		dispatch(checkUserSession());
 	}, []);
+
+	useEffect(() => {
+		if (currentUser) {
+			setTimeout(() => {
+				const displayName =
+					currentUser.displayName[0].toLocaleUpperCase() +
+					currentUser.displayName.slice(1);
+				setUserName(displayName);
+			}, 1000);
+		}
+	}, [currentUser]);
+
+	useEffect(() => {
+		if (userName !== 'Guest') {
+			displayNotification(`Welcome ${userName}!`, { type: 'success' });
+		}
+	}, [userName]);
 
 	return (
 		<Suspense fallback={<Spinner />}>
