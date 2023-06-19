@@ -105,6 +105,7 @@ const PaymentForm = () => {
 				>
 					Pay Now
 				</PaymentButton>
+				<h3>Test a purchase: Type 424242... on all the fields</h3>
 			</FormContainer>
 		</PaymentFormContainer>
 	);

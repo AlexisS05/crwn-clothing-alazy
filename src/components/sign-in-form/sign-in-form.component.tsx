@@ -75,6 +75,7 @@ const SignInForm: React.FC<{ isActive: boolean }> = ({ isActive }) => {
 					</Button>
 				</ButtonContainer>
 			</form>
+			<h3>Test the sign in: Email: test@gmail.com, Password: 12341234</h3>
 		</SignInContainer>
 	);
 };
