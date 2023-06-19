@@ -29,7 +29,6 @@ const ConfirmationPage = () => {
 
 	useEffect(() => {
 		const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-			// Only remove cartItems from localStorage if the user is closing the tab/browser
 			if (
 				window.location.pathname === '/confirmation' ||
 				window.location.pathname === '/'

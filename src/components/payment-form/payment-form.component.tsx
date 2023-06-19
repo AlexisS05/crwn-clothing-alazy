@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import {
+	selectCartCount,
 	selectCartItems,
 	selectCartTotal,
 } from '../../store/cart/cart.selector';
@@ -30,6 +31,7 @@ const PaymentForm = () => {
 	const elements = useElements();
 	const amount = useSelector(selectCartTotal);
 	const currentUser = useSelector(selectCurrentUser);
+	const cartCount = useSelector(selectCartCount);
 
 	const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 	const [isFormComplete, setIsFormComplete] = useState(false);
@@ -97,11 +99,11 @@ const PaymentForm = () => {
 				<PaymentButton
 					isLoading={isProcessingPayment}
 					buttonType={
-						isFormComplete
+						isFormComplete && cartCount >= 1
 							? BUTTON_TYPE_CLASSES.base
 							: BUTTON_TYPE_CLASSES.disabled
 					}
-					disabled={!isFormComplete}
+					disabled={!isFormComplete || cartCount === 0}
 				>
 					Pay Now
 				</PaymentButton>
