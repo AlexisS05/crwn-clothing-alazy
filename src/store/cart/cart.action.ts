@@ -67,20 +67,6 @@ export type SetIsCartOpen = ActionWithPayload<
 	boolean
 >;
 
-// export type AddItemToCart = ActionWithPayload<
-// 	CART_ACTION_TYPES.SET_CART_ITEMS,
-// 	CartItems[]
-// >;
-
-// export type SubtractItemToCart = ActionWithPayload<
-// 	CART_ACTION_TYPES.SET_CART_ITEMS,
-// 	CartItems[]
-// >;
-// export type DeleteItemFromCart = ActionWithPayload<
-// 	CART_ACTION_TYPES.SET_CART_ITEMS,
-// 	CartItems[]
-// >;
-
 export type SetCartItems = ActionWithPayload<
 	CART_ACTION_TYPES.SET_CART_ITEMS,
 	CartItems[]
@@ -90,6 +76,29 @@ export type ClearCartItems = ActionWithPayload<
 	CART_ACTION_TYPES.CLEAR_CART_ITEMS,
 	boolean
 >;
+
+export type ClearCartItemsNoFirebase = ActionWithPayload<
+	CART_ACTION_TYPES.CLEAR_CART_ITEMS,
+	boolean
+>;
+
+// export type SetCartItemQuantity = ActionWithPayload<
+// 	CART_ACTION_TYPES.SET_CART_ITEM_QUANTITY,
+// 	{ cartItemToUpdate: CartItems[]; newQuantity: number }
+// >;
+
+// export const setCartItemQuantity = withMatcher(
+// 	(cartItemToUpdate: CartItems, newQuantity: number) =>
+// 		createAction(CART_ACTION_TYPES.SET_CART_ITEM_QUANTITY, {
+// 			cartItemToUpdate,
+// 			newQuantity,
+// 		})
+// );
+
+export const clearCartItemsNoFirebase = withMatcher(
+	(): ClearCartItemsNoFirebase =>
+		createAction(CART_ACTION_TYPES.CLEAR_CART_ITEMS, true)
+);
 
 export const clearCartItems = withMatcher(
 	(isCartOpen: boolean): ClearCartItems =>

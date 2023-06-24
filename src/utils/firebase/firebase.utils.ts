@@ -21,9 +21,11 @@ import {
 	query,
 	getDocs,
 	QueryDocumentSnapshot,
+	updateDoc,
 } from 'firebase/firestore';
 
 import { Category } from '../../store/categories/category.types';
+import { CartItems } from '../../store/cart/cart.types';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyCsOQYyEULJzHJ5smFWe70IW8zqfvVsO3I',
@@ -87,6 +89,7 @@ export type UserData = {
 	createdAt: Date;
 	displayName: string;
 	email: string;
+	cartItems: CartItems[];
 };
 
 export const createUserDocumentFromAuth = async (
@@ -101,6 +104,7 @@ export const createUserDocumentFromAuth = async (
 
 	if (!userSnapshot.exists()) {
 		const { displayName, email } = userAuth;
+
 		const createdAt = new Date();
 
 		try {
@@ -119,6 +123,118 @@ export const createUserDocumentFromAuth = async (
 
 	return userSnapshot as QueryDocumentSnapshot<UserData>;
 };
+export function mergeCartItems(
+	existingItems: CartItems[],
+	newItems: CartItems[]
+): CartItems[] {
+	const mergedItems: CartItems[] = [...existingItems];
+
+	for (const newItem of newItems) {
+		const existingItemIndex = mergedItems.findIndex(
+			(item) => item.id === newItem.id
+		);
+
+		if (existingItemIndex !== -1) {
+			const existingItem = mergedItems[existingItemIndex];
+			const mergedItem: CartItems = {
+				...existingItem,
+				quantity: newItem.quantity,
+				// Add any other properties you want to merge or update
+			};
+
+			mergedItems[existingItemIndex] = mergedItem;
+		} else {
+			mergedItems.push(newItem);
+		}
+	}
+
+	return mergedItems;
+}
+
+// export function cartItemsObjects(cartItems: CartItems[]): CartItems[] {
+// 	const cartItemsObjects: CartItems[] = cartItems.map((cartItem) => {
+// 		return {
+// 			id: cartItem.id,
+// 			name: cartItem.name,
+// 			quantity: cartItem.quantity,
+// 		};
+// 	});
+
+// 	return cartItemsObjects;
+// }
+
+export const updateCartInFirebase = async (
+	userAuth: User,
+	cartItems: CartItems[]
+): Promise<void> => {
+	if (!userAuth) return;
+
+	const userDocRef = doc(db, 'users', userAuth.uid);
+
+	try {
+		const userSnapshot = await getDoc(userDocRef);
+		const existingCartItems = userSnapshot.data()?.cartItems || [];
+
+		// Find the items that are present in Redux but not in the new cart items
+		const removedCartItems = existingCartItems.filter(
+			(existingItem: CartItems) =>
+				!cartItems.find((newItem: CartItems) => newItem.id === existingItem.id)
+		);
+
+		// Update the cart items in Firebase by removing the items to be removed
+		let updatedCartItems = existingCartItems.filter(
+			(existingItem: CartItems) =>
+				!removedCartItems.find(
+					(removedItem: CartItems) => removedItem.id === existingItem.id
+				)
+		);
+
+		// Add the new items to the cart
+		for (const newItem of cartItems) {
+			const existingItemIndex = updatedCartItems.findIndex(
+				(item: CartItems) => item.id === newItem.id
+			);
+
+			if (existingItemIndex !== -1) {
+				// If the item already exists, update the quantity or any other properties
+				const existingItem = updatedCartItems[existingItemIndex];
+				const mergedItem: CartItems = {
+					...existingItem,
+					quantity: newItem.quantity,
+					// Add any other properties you want to merge or update
+				};
+
+				updatedCartItems[existingItemIndex] = mergedItem;
+			} else {
+				// If the item doesn't exist, add it to the cart
+				updatedCartItems.push(newItem);
+			}
+		}
+
+		await updateDoc(userDocRef, {
+			cartItems: updatedCartItems,
+		});
+	} catch (err) {
+		console.error('Error updating the cart in Firebase', err);
+	}
+};
+export const getCartItemsFromFirebase = async (
+	userAuth: User
+): Promise<CartItems[]> => {
+	if (!userAuth) return [];
+
+	const userDocRef = doc(db, 'users', userAuth.uid);
+	const userSnapshot = await getDoc(userDocRef);
+
+	if (userSnapshot.exists()) {
+		const userData = userSnapshot.data();
+		return userData?.cartItems || [];
+	}
+
+	return [];
+};
+
+export default getCartItemsFromFirebase;
 
 export const createAuthUserWithEmailAndPassword = async (
 	email: string,

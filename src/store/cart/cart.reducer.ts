@@ -1,4 +1,9 @@
-import { setCartItems, setIsCartOpen, clearCartItems } from './cart.action';
+import {
+	setCartItems,
+	setIsCartOpen,
+	clearCartItems,
+	// setCartItemQuantity,
+} from './cart.action';
 import { CartItems } from './cart.types';
 import { AnyAction } from 'redux';
 
@@ -23,9 +28,20 @@ export const cartReducer = (
 	if (setCartItems.match(action)) {
 		return { ...state, cartItems: action.payload };
 	}
+
 	if (clearCartItems.match(action)) {
 		return { ...state, cartItems: [], isCartOpen: action.payload };
 	}
+
+	// if (setCartItemQuantity.match(action)) {
+	// 	const { cartItemToUpdate, newQuantity } = action.payload;
+	// 	const updatedCartItems = state.cartItems.map((item) =>
+	// 		item.id === cartItemToUpdate.id
+	// 			? { ...item, quantity: newQuantity }
+	// 			: item
+	// 	);
+	// 	return { ...state, cartItems: updatedCartItems };
+	// }
 
 	return state;
 };

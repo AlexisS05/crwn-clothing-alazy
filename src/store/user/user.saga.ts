@@ -1,8 +1,8 @@
-import { takeLatest, all, call, put } from 'typed-redux-saga/macro';
+import { takeLatest, all, call, put, select } from 'typed-redux-saga/macro';
 import { AuthErrorCodes, User } from 'firebase/auth';
 import { toast, ToastOptions } from 'react-toastify';
 
-import {
+import getCartItemsFromFirebase, {
 	getCurrentUser,
 	createUserDocumentFromAuth,
 	signInWithGooglePopup,
@@ -10,6 +10,9 @@ import {
 	createAuthUserWithEmailAndPassword,
 	signOutUser,
 	AddtionalInformation,
+	updateCartInFirebase,
+	db,
+	mergeCartItems,
 } from '../../utils/firebase/firebase.utils';
 
 import { USER_ACTION_TYPES } from './user.types';
@@ -27,6 +30,9 @@ import {
 	navigateToHomePage,
 } from './user.action';
 import { FirebaseError } from 'firebase/app';
+import { CartItems } from '../cart/cart.types';
+import { RootState } from '../store';
+import { clearCartItemsNoFirebase, setCartItems } from '../cart/cart.action';
 
 export function displayNotification(message: string, options: ToastOptions) {
 	toast(message, options);
@@ -42,16 +48,33 @@ export function* getSnapshotFromUserAuth(
 			userAuth,
 			additionalDetails
 		);
+
 		if (userSnapshot) {
 			yield* put(
 				signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() })
 			);
+
+			const { cartItems } = yield* select(
+				(state: RootState) => state.cartItems
+			);
+			const firebaseCartItems: CartItems[] = yield* call(
+				getCartItemsFromFirebase,
+				userAuth
+			);
+
+			// Merge existing cart items with the cart items from Firebase
+			const mergedCartItems = mergeCartItems(firebaseCartItems, cartItems);
+
+			// Update the cart in Firebase with the merged cart items
+			yield* call(updateCartInFirebase, userAuth, mergedCartItems);
+
+			// Update the cart in Redux with the merged cart items
+			yield* put(setCartItems(mergedCartItems));
 		}
 	} catch (err) {
 		yield* put(signInFailed(err as Error));
 	}
 }
-
 export function* signInWithEmail({
 	payload: { email, password },
 }: EmailSignInStart) {
@@ -91,6 +114,7 @@ export function* signInWithGoogle() {
 		const { user } = yield* call(signInWithGooglePopup);
 		console.log(user, 'Signed in With Google');
 		yield* call(getSnapshotFromUserAuth, user);
+		yield* put(navigateToHomePage());
 	} catch (err) {
 		yield* put(signInFailed(err as Error));
 	}
@@ -130,6 +154,7 @@ export function* signInAfterSignUp({
 export function* signOut() {
 	try {
 		yield* call(signOutUser);
+		yield* put(clearCartItemsNoFirebase());
 		yield* put(signOutSuccess());
 	} catch (err) {
 		yield* put(signOutFailed(err as Error));
