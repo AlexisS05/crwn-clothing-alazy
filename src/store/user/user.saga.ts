@@ -2,7 +2,8 @@ import { takeLatest, all, call, put, select } from 'typed-redux-saga/macro';
 import { AuthErrorCodes, User } from 'firebase/auth';
 import { toast, ToastOptions } from 'react-toastify';
 
-import getCartItemsFromFirebase, {
+import {
+	getCartItemsFromFirebase,
 	getCurrentUser,
 	createUserDocumentFromAuth,
 	signInWithGooglePopup,
@@ -33,6 +34,7 @@ import { FirebaseError } from 'firebase/app';
 import { CartItems } from '../cart/cart.types';
 import { RootState } from '../store';
 import { clearCartItemsNoFirebase, setCartItems } from '../cart/cart.action';
+import { deepCompare } from '../cart/cart.saga';
 
 export function displayNotification(message: string, options: ToastOptions) {
 	toast(message, options);
@@ -50,26 +52,35 @@ export function* getSnapshotFromUserAuth(
 		);
 
 		if (userSnapshot) {
-			yield* put(
-				signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() })
-			);
-
 			const { cartItems } = yield* select(
 				(state: RootState) => state.cartItems
 			);
-			const firebaseCartItems: CartItems[] = yield* call(
-				getCartItemsFromFirebase,
-				userAuth
+			const firebaseCartItems = yield* call(getCartItemsFromFirebase, userAuth);
+
+			let mergedCartItems: CartItems[] = [];
+
+			if (firebaseCartItems.length > 0) {
+				// If there are existing cart items in Firebase, merge them with the cart items from Redux
+				mergedCartItems = mergeCartItems(firebaseCartItems, cartItems);
+			} else {
+				// If there are no existing cart items in Firebase, use the cart items from Redux
+				mergedCartItems = cartItems;
+			}
+
+			// Check if the cart items have already been updated to Firebase
+			const isCartUpdated = deepCompare(firebaseCartItems, cartItems);
+
+			if (!isCartUpdated) {
+				// Update the cart in Redux with the merged cart items
+				yield* put(setCartItems(mergedCartItems));
+
+				// Update the cart in Firebase with the merged cart items
+				yield* call(updateCartInFirebase, userAuth, mergedCartItems);
+			}
+
+			yield* put(
+				signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() })
 			);
-
-			// Merge existing cart items with the cart items from Firebase
-			const mergedCartItems = mergeCartItems(firebaseCartItems, cartItems);
-
-			// Update the cart in Firebase with the merged cart items
-			yield* call(updateCartInFirebase, userAuth, mergedCartItems);
-
-			// Update the cart in Redux with the merged cart items
-			yield* put(setCartItems(mergedCartItems));
 		}
 	} catch (err) {
 		yield* put(signInFailed(err as Error));
@@ -155,6 +166,7 @@ export function* signOut() {
 	try {
 		yield* call(signOutUser);
 		yield* put(clearCartItemsNoFirebase());
+		displayNotification('Signed Out Successfully', { type: 'success' });
 		yield* put(signOutSuccess());
 	} catch (err) {
 		yield* put(signOutFailed(err as Error));

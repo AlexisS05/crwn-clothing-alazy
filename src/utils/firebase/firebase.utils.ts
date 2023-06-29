@@ -106,12 +106,14 @@ export const createUserDocumentFromAuth = async (
 		const { displayName, email } = userAuth;
 
 		const createdAt = new Date();
+		const cartItems: CartItems[] = [];
 
 		try {
 			await setDoc(userDocRef, {
 				displayName,
 				email,
 				createdAt,
+				cartItems,
 				...additionalDetails,
 			});
 			const userSnapshot = await getDoc(userDocRef);
@@ -138,7 +140,7 @@ export function mergeCartItems(
 			const existingItem = mergedItems[existingItemIndex];
 			const mergedItem: CartItems = {
 				...existingItem,
-				quantity: newItem.quantity,
+				quantity: existingItem.quantity + newItem.quantity, // Merge quantities instead of replacing
 				// Add any other properties you want to merge or update
 			};
 
@@ -150,18 +152,6 @@ export function mergeCartItems(
 
 	return mergedItems;
 }
-
-// export function cartItemsObjects(cartItems: CartItems[]): CartItems[] {
-// 	const cartItemsObjects: CartItems[] = cartItems.map((cartItem) => {
-// 		return {
-// 			id: cartItem.id,
-// 			name: cartItem.name,
-// 			quantity: cartItem.quantity,
-// 		};
-// 	});
-
-// 	return cartItemsObjects;
-// }
 
 export const updateCartInFirebase = async (
 	userAuth: User,
@@ -234,7 +224,7 @@ export const getCartItemsFromFirebase = async (
 	return [];
 };
 
-export default getCartItemsFromFirebase;
+// export default getCartItemsFromFirebase;
 
 export const createAuthUserWithEmailAndPassword = async (
 	email: string,

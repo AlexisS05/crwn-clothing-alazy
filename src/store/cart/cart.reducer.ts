@@ -33,15 +33,5 @@ export const cartReducer = (
 		return { ...state, cartItems: [], isCartOpen: action.payload };
 	}
 
-	// if (setCartItemQuantity.match(action)) {
-	// 	const { cartItemToUpdate, newQuantity } = action.payload;
-	// 	const updatedCartItems = state.cartItems.map((item) =>
-	// 		item.id === cartItemToUpdate.id
-	// 			? { ...item, quantity: newQuantity }
-	// 			: item
-	// 	);
-	// 	return { ...state, cartItems: updatedCartItems };
-	// }
-
 	return state;
 };
